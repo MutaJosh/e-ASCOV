@@ -11,14 +11,22 @@ import kotlinx.android.synthetic.main.activity_results.*
  */
 class ResultActivity : AppCompatActivity() {
 
-    companion object { const val EXTRA_RESULT = "EXTRA_RESULT"}
+    companion object {
+        const val EXTRA_RESULT = "EXTRA_RESULT"
+        const val EXTRA_USER_ID = "EXTRA_USER_ID"
+        const val EXTRA_RDT_RESULT = "EXTRA_RDT_RESULT"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_results)
 
         val res : ResultType = intent.extras?.getSerializable(EXTRA_RESULT) as ResultType
+        val user_id  = intent.extras?.getSerializable(EXTRA_USER_ID)
+        val rdt_result  = intent.extras?.getSerializable(EXTRA_RDT_RESULT)
 
+        user_id_text.text = user_id.toString()
+        rdt_result_text.text = rdt_result.toString()
         result_text.text = getString(
             when (res){
                 ResultType.CASE1 -> R.string.result1

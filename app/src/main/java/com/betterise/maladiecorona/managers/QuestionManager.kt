@@ -35,6 +35,7 @@ class QuestionManager(private var questions : Array<String>, private var choices
     fun canGoBack()         = questionIndex > 0
     fun getChoices()     = choices[questionIndex].split("|")
     fun getAnswer()          = answers[questionIndex]
+    fun getSpecificAnswer(value : Int)          = answers[value]
     fun setAnswer(value : Int)      { answers[questionIndex].value = value }
     fun setTextAnswer(text : String){ answers[questionIndex].text = text }
     fun getResults()     = ResultManager().getResults(answers)
@@ -54,6 +55,7 @@ class QuestionManager(private var questions : Array<String>, private var choices
         "tel"           -> QuestionType.TELEPHONE
         "digit_forced"  -> QuestionType.DIGIT_FORCED
         "city"          -> QuestionType.CITY
+        "rdt"           -> QuestionType.RDT
         else            -> QuestionType.BINARY
     }
 

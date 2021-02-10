@@ -35,6 +35,7 @@
 
     <string name="select_option_error">Please select one option</string>
     <string name="city_error">Please enter a city of residence</string>
+    <string name="rdt_error">Please capture the test result</string>
     <string name="days_error">Please enter a number in between 0 and 35 days</string>
     <string name="age_error">Please enter age between 0 and 120</string>
     <string name="height_error">Please enter heights in between 30 and 220 cm</string>
@@ -65,6 +66,7 @@
         <item>Has the subject had a cancer in the past 3 years?</item>
         <item>Does the subject have a known respiratory illness ?</item>
         <item>Is the subject pregnant ?</item>
+        <item></item>
     </string-array>
 
 
@@ -93,6 +95,7 @@
         <item>Yes|No</item>
         <item>Yes|No</item>
         <item>Yes|No|Not applicable</item>
+        <item></item>
     </string-array>
 
     <string-array name="question_types">
@@ -120,6 +123,7 @@
         <item>binary</item>
         <item>binary</item>
         <item>ternary</item>
+        <item>rdt</item>
     </string-array>
 
     <string name="result1">The situation probably does not fall under COVID-19. Ask the subject to come back to see you if new symptoms appear.</string>
@@ -132,5 +136,15 @@
     <string name="question_example">Avez-vous de l’hypertension artérielle mal équilibrée ? Ou avez-vous une maladie cardiaque ou vasculaire ? Prenez-vous un traitement pour le cœur ? </string>
     <string name="export_example">Vous êtes sur le point d’exporter les 213 précédents diagnostics effectués.\n\nLe dernière export date du 21/06/20, à 21h15.</string>
     <string name="results_example">Votre situation peut relever d’un COVID-19. A adresser au centre de santé pour évaluation par un(e) infirmier(e).</string>
+    <string name="user_id">User phone number</string>
+    <string name="rdt_result_text">RDT result text</string>
+    <string name="user_id_label">"User ID: "</string>
+    <string name="rdt_result_label">"RDT result: "</string>
+    <string name="lunch_rdt">Lucnh RDT</string>
+    <string name="capture_result">Capture result</string>
+    <string name="time_remaining">Time remaining: </string>
+    <string name="reults_valid_for">Results valid for: </string>
+    <string name="results_expired">Results expired</string>
+    <string name="pending_rdt_result">pending</string>
 
 </resources>

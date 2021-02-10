@@ -30,5 +30,6 @@ class Question {
         const val CANCER                    = 21
         const val RESPIRATORY_DISEASE       = 22
         const val PREGNANT                  = 23
+        const val RDT                       = 24
     }
 }

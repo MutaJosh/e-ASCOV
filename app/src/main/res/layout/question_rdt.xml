@@ -15,17 +15,7 @@
         android:padding="15dp">
 
         <Button
-            android:id="@+id/capture_results"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_9f9f9f"
-            android:enabled="true"
-            android:text="@string/capture_result"
-            android:textColor="#FFFFFF"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/lunch_rdt"
+            android:id="@+id/rdt_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/green"

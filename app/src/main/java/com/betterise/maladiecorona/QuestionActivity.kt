@@ -401,13 +401,12 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             group?.rdt_result?.setText(answer.text)
             group?.rdt_result_label2?.visibility = VISIBLE
             group?.rdt_result?.visibility = VISIBLE
-            group?.lunch_rdt?.isEnabled = false
-            group?.lunch_rdt?.setBackgroundColor(getResources().getColor(R.color.grey_9f9f9f))
+            group?.rdt_action?.isEnabled = false
+            group?.rdt_action?.setBackgroundColor(getResources().getColor(R.color.grey_9f9f9f))
         }
 
         if (answer.text == getString(R.string.pending_rdt_result)) {
-            group?.lunch_rdt?.visibility = GONE
-            group?.capture_results?.visibility = VISIBLE
+            group?.rdt_action?.setText(getString(R.string.capture_result))
             group?.countdownTimer?.visibility = VISIBLE
             group?.rdt_result?.setText(answer.text)
         }
@@ -417,8 +416,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             group?.errorRDT?.visibility = INVISIBLE
         }
 
-        group?.lunch_rdt?.setOnClickListener { requestRDTScan() }
-        group?.capture_results?.setOnClickListener { captureRDTResults() }
+        group?.rdt_action?.setOnClickListener { lunchRDTapp() }
         answer_container.addView(group)
     }
 
@@ -562,6 +560,14 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         }
     }
 
+    private fun lunchRDTapp(){
+        if (group?.rdt_result?.text.toString() == getString(R.string.pending_rdt_result)){
+            captureRDTResults()
+        } else {
+            requestRDTScan()
+        }
+    }
+
     private fun requestRDTScan() {
         try {
             val intent = RdtIntentBuilder.forProvisioning()
@@ -594,8 +600,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == ACTIVITY_PROVISION && resultCode == RESULT_OK) {
-            group?.lunch_rdt?.visibility = GONE
-            group?.capture_results?.visibility = VISIBLE
+            group?.rdt_action?.setText(getString(R.string.capture_result))
             val session = data?.getRdtSession()
             val timeStarted = session?.timeStarted
             val timeResolved = session?.timeResolved
@@ -614,8 +619,8 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             group?.rdt_result?.setText(result?.results.toString())
             group?.rdt_result_label2?.visibility = VISIBLE
             group?.rdt_result?.visibility = VISIBLE
-            group?.capture_results?.isEnabled = false
-            group?.capture_results?.setBackgroundColor(getResources().getColor(R.color.grey_9f9f9f))
+            group?.rdt_action?.isEnabled = false
+            group?.rdt_action?.setBackgroundColor(getResources().getColor(R.color.grey_9f9f9f))
             group?.countdownTimer?.visibility = INVISIBLE
             validate()
         }
@@ -629,7 +634,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
 
             override fun onFinish() {
                 group?.countdownTimer?.setTextColor(getResources().getColor(R.color.green))
-                group?.capture_results?.setBackgroundColor(getResources().getColor(R.color.green))
+                group?.rdt_action?.setBackgroundColor(getResources().getColor(R.color.green))
                 object : CountDownTimer(resolvedExpiredDifference, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
                         group?.countdownTimer?.setText(getString(R.string.reults_valid_for) + millisUntilFinished / 1000 + "s")

@@ -1,6 +1,5 @@
 package com.betterise.maladiecorona
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -12,7 +11,6 @@ import android.util.Log
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +21,6 @@ import com.betterise.maladiecorona.managers.QuestionManager
 import com.betterise.maladiecorona.model.Question
 import com.betterise.maladiecorona.model.QuestionType
 import kotlinx.android.synthetic.main.activity_question.*
-import kotlinx.android.synthetic.main.activity_results.*
 import kotlinx.android.synthetic.main.question_bullet.view.*
 import kotlinx.android.synthetic.main.question_city.view.*
 import kotlinx.android.synthetic.main.question_digit.view.*
@@ -35,7 +32,6 @@ import kotlinx.android.synthetic.main.question_tel.view.*
 import org.rdtoolkit.support.interop.RdtIntentBuilder
 import org.rdtoolkit.support.interop.RdtUtils
 import org.rdtoolkit.support.interop.getRdtSession
-import org.rdtoolkit.support.model.session.ProvisionMode
 import java.util.*
 
 
@@ -639,7 +635,8 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
     private fun startResultCaptureTimer(startedResolvedDifference: Long, resolvedExpiredDifference: Long) {
         object : CountDownTimer(startedResolvedDifference, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                group?.countdownTimer?.setText(getString(R.string.time_remaining) + millisUntilFinished / 1000 + "s")
+                val formatedTime = formatCountdownTime(millisUntilFinished)
+                group?.countdownTimer?.setText(getString(R.string.time_remaining) + "\n" + formatedTime)
             }
 
             override fun onFinish() {
@@ -647,7 +644,8 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
                 group?.rdt_action?.setBackgroundColor(getResources().getColor(R.color.green))
                 object : CountDownTimer(resolvedExpiredDifference, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
-                        group?.countdownTimer?.setText(getString(R.string.reults_valid_for) + millisUntilFinished / 1000 + "s")
+                        val formatedTime = formatCountdownTime(millisUntilFinished)
+                        group?.countdownTimer?.setText(getString(R.string.reults_valid_for)+ "\n" + formatedTime)
                     }
 
                     override fun onFinish() {
@@ -657,6 +655,14 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
                 }.start()
             }
         }.start()
+    }
+
+    private fun formatCountdownTime(millisUntilFinished: Long): String {
+        val seconds = millisUntilFinished / 1000
+        val p1: Long = seconds % 60
+        var p2: Long = seconds / 60
+        val p3 = p2 % 60
+        return "${p3}m:${p1}s"
     }
 
     override fun onRequestPermissionsResult(

@@ -23,6 +23,7 @@ import com.betterise.maladiecorona.managers.QuestionManager
 import com.betterise.maladiecorona.model.Question
 import com.betterise.maladiecorona.model.QuestionType
 import kotlinx.android.synthetic.main.activity_question.*
+import kotlinx.android.synthetic.main.activity_results.*
 import kotlinx.android.synthetic.main.question_bullet.view.*
 import kotlinx.android.synthetic.main.question_city.view.*
 import kotlinx.android.synthetic.main.question_digit.view.*
@@ -51,10 +52,11 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
 
     private val ACTIVITY_PROVISION = 1
     private val ACTIVITY_CAPTURE = 2
-    private val SESSION_ID: String = UUID.randomUUID().toString()
-    private val CLOUDWORKS_DSN = "https://cloudworks.dimagi.com/ingest/500899ce4252e8291356a7c068e611b02a3218ac"
+    private val CW_SESSION_ID: String = UUID.randomUUID().toString()
+    private val CLOUDWORKS_DSN = "https://cloudworks.dimagi.com/ingest/0c30d82c77de611350f7f031b0854258bb64b1a3"
     private val COVID_TEST_PROFILE = "sd_standard_q_c19"
-
+    private val RDT_PENDING_STATUS = "pending"
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -397,7 +399,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         btn_next.isEnabled = true
 
 
-        if ((answer.text.isNotEmpty()) and (answer.text != getString(R.string.pending_rdt_result))) {
+        if ((answer.text.isNotEmpty()) and (answer.text != RDT_PENDING_STATUS)) {
             group?.rdt_result?.setText(answer.text)
             group?.rdt_result_label2?.visibility = VISIBLE
             group?.rdt_result?.visibility = VISIBLE
@@ -405,7 +407,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             group?.rdt_action?.setBackgroundColor(getResources().getColor(R.color.grey_9f9f9f))
         }
 
-        if (answer.text == getString(R.string.pending_rdt_result)) {
+        if (answer.text == RDT_PENDING_STATUS) {
             group?.rdt_action?.setText(getString(R.string.capture_result))
             group?.countdownTimer?.visibility = VISIBLE
             group?.rdt_result?.setText(answer.text)
@@ -507,7 +509,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
 
     private fun validateRDT(): Boolean {
         questionManager!!.setTextAnswer(group?.rdt_result?.text.toString())
-        if ((!group?.rdt_result?.text.isNullOrEmpty()) and (group?.rdt_result?.text.toString() != getString(R.string.pending_rdt_result)))
+        if ((!group?.rdt_result?.text.isNullOrEmpty()) and (group?.rdt_result?.text.toString() != RDT_PENDING_STATUS))
             return true
 
         group?.errorRDT?.visibility = VISIBLE
@@ -561,7 +563,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
     }
 
     private fun lunchRDTapp(){
-        if (group?.rdt_result?.text.toString() == getString(R.string.pending_rdt_result)){
+        if (group?.rdt_result?.text.toString() == RDT_PENDING_STATUS){
             captureRDTResults()
         } else {
             requestRDTScan()
@@ -571,9 +573,9 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
     private fun requestRDTScan() {
         try {
             val intent = RdtIntentBuilder.forProvisioning()
-                .setSessionId(SESSION_ID)
+                .setSessionId(CW_SESSION_ID)
                 .setFlavorOne(questionManager?.getSpecificAnswer(0)?.text.toString())
-                .setFlavorTwo("")
+                .setFlavorTwo(CW_SESSION_ID)
                 .setCloudworksBackend(CLOUDWORKS_DSN)
                 .requestTestProfile(COVID_TEST_PROFILE)
                 .build();
@@ -587,7 +589,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
     private fun captureRDTResults() {
         try {
             val intent = RdtIntentBuilder.forCapture()
-                .setSessionId(SESSION_ID)
+                .setSessionId(CW_SESSION_ID)
                 .build()
 
             startActivityForResult(intent, RDTOOLKIT_CAPTURE_RESULT_REQUEST_CODE)
@@ -608,7 +610,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
 
             val startedResolvedDifference: Long = timeResolved!!.getTime() - timeStarted!!.getTime()
             val resolvedExpiredDifference: Long = timeExpired!!.getTime() - timeResolved!!.getTime()
-            group?.rdt_result?.setText(getString(R.string.pending_rdt_result))
+            group?.rdt_result?.setText(RDT_PENDING_STATUS)
             group?.countdownTimer?.visibility = VISIBLE
             validate()
             startResultCaptureTimer(startedResolvedDifference, resolvedExpiredDifference)
@@ -616,7 +618,15 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         if (requestCode == ACTIVITY_CAPTURE && resultCode == RESULT_OK) {
             val session = RdtUtils.getRdtSession(data!!);
             val result = session?.result
-            group?.rdt_result?.setText(result?.results.toString())
+
+            group?.rdt_result?.text = getString(
+                when (result?.results.toString()) {
+                    "{sars_cov2=sars_cov2_pos}" -> R.string.rdt_result_pos
+                    "{sars_cov2=sars_cov2_neg}" -> R.string.rdt_result_neg
+                    else -> R.string.rdt_result_invalid
+                }
+            )
+            
             group?.rdt_result_label2?.visibility = VISIBLE
             group?.rdt_result?.visibility = VISIBLE
             group?.rdt_action?.isEnabled = false

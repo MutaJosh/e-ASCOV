@@ -52,7 +52,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
     private val ACTIVITY_PROVISION = 1
     private val ACTIVITY_CAPTURE = 2
     private val SESSION_ID: String = UUID.randomUUID().toString()
-    private val CLOUDWORKS_DSN = "500899ce4252e8291356a7c068e611b02a3218ac"
+    private val CLOUDWORKS_DSN = "https://cloudworks.dimagi.com/ingest/500899ce4252e8291356a7c068e611b02a3218ac"
     private val COVID_TEST_PROFILE = "sd_standard_q_c19"
 
     override fun onCreate(savedInstanceState: Bundle?) {

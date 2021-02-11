@@ -139,7 +139,7 @@
     <string name="rdt_result_text">RDT result text</string>
     <string name="user_id_label">"User ID: "</string>
     <string name="rdt_result_label">"RDT result: "</string>
-    <string name="lunch_rdt">Lucnh RDT</string>
+    <string name="lunch_rdt">Launch RDT</string>
     <string name="capture_result">Capture result</string>
     <string name="time_remaining">Test is resolving, please wait for timer: </string>
     <string name="reults_valid_for">Results valid for: </string>

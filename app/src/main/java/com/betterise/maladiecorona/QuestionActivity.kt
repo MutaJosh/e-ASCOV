@@ -575,6 +575,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
                 .setCloudworksBackend(CLOUDWORKS_DSN)
                 .requestTestProfile(COVID_TEST_PROFILE)
                 .setSecondaryCaptureRequirements("capture_windowed")
+                .setInTestQaMode()
                 .build();
 
             startActivityForResult(intent, RDTOOLKIT_ACTIVITY_REQUEST_CODE)
